@@ -15,7 +15,7 @@ setup(
     license='MIT',
     author="guangrei",
     author_email="myawn@pm.me",
-    description="PyZCache is dependency less python key value cache based file storage and json serialize",
+    description="PyZCache is dependency free python key value cache based file storage and json serialize",
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords="cache key value file json",

@@ -1,4 +1,4 @@
-PyZCache is dependency less python key value cache based file storage and json serialize.
+PyZCache is dependency free python key value cache based file storage and json serialize.
 
 extra features:
 - limit able stack cache
