@@ -1,3 +1,7 @@
+[![Downloads](https://static.pepy.tech/badge/zcache)](https://pepy.tech/project/zcache)
+[![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
+[![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)
+
 PyZCache is dependency free python key value cache based file storage and json serialize.
 
 extra features:
