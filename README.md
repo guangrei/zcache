@@ -8,7 +8,7 @@ PyZCache is dependency free python key value cache based file storage and json s
 extra features:
 - limit able stack cache
 - option to add ttl (time to life) in cache content
-- encryption (not yet implemented)
+- smart request
 
 ## Installation
 ```
@@ -48,6 +48,41 @@ print(d.set("three", 3))  # False out of stack limit
 d.delete("one")  # delete one item from stack
 print(d.set("three", 3))  # True
 ```
+
+# SmartRequest
+
+`SmartRequest` is Simple HTTP Client with smart caching system provide by `zcache`.
+
+example usage of `SmartRequest(url, cache_path, cache_time, offline_ttl)``
+```python
+from zcache import SmartRequest
+
+req = SmartRequest("https://www.example.com")
+print(req.is_loaded_from_cache) # check is response loaded from cache
+response_headers = req.response.get('headers')
+response_body = req.response.get('body')
+```
+to make advance request you can create costum url object with other library, for example:
+```python
+from zcache import SmartRequest
+import requests
+
+class MyRequest:
+    url = "https://www.example.com"
+    
+    def get():
+        """
+        this method called by SmartRequest to retrieve content.
+        you can put request logic get, post etc and return tuple(headers=dict, body=str)
+        """
+        
+        ret = requests.get(MyRequest.url)
+        return dict(ret.headers), ret.text
+
+
+req = SmartRequest(MyRequest)
+```
+note: caching for request media/binary content is possible with `base64` encode. 
 ## License
 
 MIT
