@@ -21,7 +21,7 @@ basic example:
 from zcache import Cache
 import time
 
-c = Cache(path="/tmp")
+c = Cache(path="/tmp/tes1.cache")
 print("set foo=bar: ", c.set("foo", "bar"))
 print("c size:", c.size())
 print("c has foo: ", c.has("foo"))
@@ -40,7 +40,7 @@ example with limited stack:
 ```python
 from zcache import Cache
 
-d = Cache(path="/tmp", limit=2)
+d = Cache(path="/tmp/test2.cache", limit=2)
 d.reset()  # reset cache stack to 0
 print(d.set("one", 1))  # True
 print(d.set("two", 2))  # True
@@ -58,7 +58,7 @@ example usage of `SmartRequest(url, cache_path, cache_time, offline_ttl)`:
 from zcache import SmartRequest
 
 req = SmartRequest("https://www.example.com", cache_path="/tmp/request1.cache")
-print(req.is_loaded_from_cache) # check is response loaded from cache
+print(req.is_loaded_from_cache) # check if response is loaded from cache
 response_headers = req.response.get('headers')
 response_body = req.response.get('body')
 ```
