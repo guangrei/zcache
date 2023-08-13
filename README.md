@@ -53,11 +53,11 @@ print(d.set("three", 3))  # True
 
 `SmartRequest` is Simple HTTP Client with smart caching system provide by `zcache`.
 
-example usage of `SmartRequest(url, cache_path, cache_time, offline_ttl)``
+example usage of `SmartRequest(url, cache_path, cache_time, offline_ttl)`:
 ```python
 from zcache import SmartRequest
 
-req = SmartRequest("https://www.example.com")
+req = SmartRequest("https://www.example.com", cache_path="/tmp/request1.cache")
 print(req.is_loaded_from_cache) # check is response loaded from cache
 response_headers = req.response.get('headers')
 response_body = req.response.get('body')
@@ -80,7 +80,7 @@ class MyRequest:
         return dict(ret.headers), ret.text
 
 
-req = SmartRequest(MyRequest)
+req = SmartRequest(MyRequest, cache_path="/tmp/request2.cache")
 ```
 note: caching for request media/binary content is possible with `base64` encode. 
 ## License

@@ -33,11 +33,10 @@ class Cache(object):
     """
     PyZCache is dependency free python key value cache based file storage and json serialize.
     """
-    __version__ = "v1.0.0"
+    __version__ = "v1.0.1"
 
     def __init__(self, path=None, limit=0):
         if path is not None:
-            path = path
             if os.path.isdir(path):
                 path = path+"/.PyZCache"
             else:
