@@ -35,7 +35,7 @@ class Cache(object):
     """
     __version__ = "v1.0.0"
 
-    def __init__(self, path=None, limit=0, encryption=None):
+    def __init__(self, path=None, limit=0):
         if path is not None:
             path = path
             if os.path.isdir(path):

@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
 from zcache import Cache, SmartRequest
+import requests
 import time
 import unittest
+
+
+class MyRequest:
+    url = "https://www.example.com"
+
+    def get():
+        r = requests.get(MyRequest.url)
+        return r.headers, r.text
 
 
 class CacheTest(unittest.TestCase):
 
     def test_cache(self):
-        c = Cache('test.cache')
+        c = Cache('/tmp/test.cache')
         c.reset()
         self.assertEqual(c.set("foo", "bar"), True)
         self.assertEqual(c.size(), 1)
@@ -22,7 +31,7 @@ class CacheTest(unittest.TestCase):
         self.assertEqual(c.size(), 0)
 
     def test_limit(self):
-        d = Cache('test2.cache', limit=2)
+        d = Cache('/tmp/test2.cache', limit=2)
         d.reset()
         self.assertEqual(d.set("one", 1), True)
         self.assertEqual(d.set("two", 2), True)
@@ -31,11 +40,11 @@ class CacheTest(unittest.TestCase):
         self.assertEqual(d.set("three", 3), True)
 
     def test_request(self):
-        import requests
 
-        r = requests.get("https://www.example.com")
-        s = MyRequests("https://www.example.com")
-        self.assertEqual(r.text, s.response["body"])
+        r = SmartRequest(MyRequest, cache_path='/tmp/request1.cache')
+        s = SmartRequest('https://www.example.com',
+                         cache_path='/tmp/request2.cache')
+        self.assertEqual(r.response["body"], s.response["body"])
 
 
 if __name__ == "__main__":
