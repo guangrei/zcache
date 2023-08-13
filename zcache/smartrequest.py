@@ -34,7 +34,7 @@ class SmartRequest:
     """
 
     def __init__(self, url, cache_path=None, cache_time=120, offline_ttl=604800):
-        if isinstance(url, object):
+        if not isinstance(url, str):
             cache_name = url.url
         else:
             cache_name = url
@@ -54,7 +54,7 @@ class SmartRequest:
                 self.is_loaded_from_cache = True
 
     def _makeRequest(self, url, cache_name, cache):
-        if isinstance(url, object):
+        if not isinstance(url, str):
             try:
                 headers, body = url.get()
                 assert type(body) == str
