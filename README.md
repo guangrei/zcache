@@ -1,4 +1,6 @@
-[![status workflow test](https://github.com/guangrei/PyZcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions) [![status workflow build](https://github.com/guangrei/PyZcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions)
+[![status workflow test](https://github.com/guangrei/PyZcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions) 
+[![status workflow build](https://github.com/guangrei/PyZcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions)
+
 [![Downloads](https://static.pepy.tech/badge/zcache)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)
@@ -62,7 +64,7 @@ print(req.is_loaded_from_cache) # check if response is loaded from cache
 response_headers = req.response.get('headers')
 response_body = req.response.get('body')
 ```
-to make advance request you can create costum url object with other library, for example:
+to make advance request you can create custom url object with other library, for example:
 ```python
 from zcache import SmartRequest
 import requests
