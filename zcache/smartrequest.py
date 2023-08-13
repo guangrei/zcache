@@ -67,7 +67,7 @@ class SmartRequest:
         try:
             response = request.urlopen(url)
             headers, body = (response.info(), response.read())
-            return {"headers": headers, "body": data.decode('utf-8')}
+            return {"headers": headers, "body": body.decode('utf-8')}
         except BaseException as e:
             if cache.has(cache_name+"_offline"):
                 return False
