@@ -10,7 +10,7 @@ class MyRequest:
 
     def get():
         r = requests.get(MyRequest.url)
-        return r.headers, r.text
+        return dict(r.headers), r.text
 
 
 class CacheTest(unittest.TestCase):
