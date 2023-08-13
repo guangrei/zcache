@@ -33,37 +33,40 @@ class Cache(object):
     """
     PyZCache is dependency free python key value cache based file storage and json serialize.
     """
-    __version__ = "0.01"
+    __version__ = "v1.0.0"
 
     def __init__(self, path=None, limit=0, encryption=None):
         if path is not None:
             path = path
+            if os.path.isdir(path):
+                path = path+"/.PyZCache"
+            else:
+                path = path
         else:
-            path = os.path.abspath(os.path.dirname(sys.argv[0]))
+            path = os.path.abspath(os.path.dirname(sys.argv[0]))+"/.PyZCache"
         self.__path = path
-        if not os.path.exists(path+"/.PyZCache"):
+        if not os.path.exists(path):
             self.__mkfile(path)
         self.__limit = limit
 
     def __loadfile(self):
-        with open(self.__path+"/.PyZCache", "r") as f:
+        with open(self.__path, "r") as f:
             self.__data = json.loads(f.read())
             self.__data["limit"] = self.__limit
 
     def __mkfile(self, path):
         data = {}
-        data["file"] = "PyZCache"
         data["first created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = self.__version__
         data["url"] = "https://github.com/guangrei/PyZCache"
         data["cache"] = {}
         data["limit"] = 0
-        with open(path+"/.PyZCache", "w") as f:
+        with open(path, "w") as f:
             f.write(json.dumps(data))
 
     def __updatefile(self):
         data = json.dumps(self.__data)
-        with open(self.__path+"/.PyZCache", "w") as f:
+        with open(self.__path, "w") as f:
             f.write(data)
         return True
 
@@ -71,7 +74,7 @@ class Cache(object):
         key = str(key)
         try:
             t = self.__data["cache"][key]
-            if(t["ttl"] != 0):
+            if (t["ttl"] != 0):
                 sisa = int(time.time())-t["time"]
                 if sisa >= t["ttl"]:
                     del self.__data["cache"][key]
@@ -145,4 +148,6 @@ class Cache(object):
 
 
 if __name__ == "__main__":
-    pass
+    c = Cache(path="test.cache")
+    c.set("aku", "kamu")
+    print(c.get("aku"))

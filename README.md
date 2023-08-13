@@ -1,3 +1,4 @@
+[![status workflow test](https://github.com/guangrei/PyZcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions) [![status workflow build](https://github.com/guangrei/PyZcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/PyZcache/actions)
 [![Downloads](https://static.pepy.tech/badge/zcache)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)

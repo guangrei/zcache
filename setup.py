@@ -10,7 +10,7 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 setup(
     name='zcache',
-    version='0.01',
+    version='v1.0.0',
     packages=['zcache',],
     license='MIT',
     author="guangrei",
@@ -19,5 +19,5 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords="cache key value file json",
-    url="https://github.com/guangrei/PyZCache",   
+    url="https://github.com/guangrei/PyZCache",
 )
