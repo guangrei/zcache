@@ -57,7 +57,6 @@ class SmartRequest:
         if not isinstance(url, str):
             try:
                 headers, body = url.get()
-                assert type(body) == str
                 return {"headers": headers, "body": body}
             except BaseException as e:
                 if cache.has(cache_name+"_offline"):
@@ -67,7 +66,7 @@ class SmartRequest:
         try:
             response = request.urlopen(url)
             headers, body = (dict(response.info()), response.read())
-            return {"headers": headers, "body": body.decode('utf-8')}
+            return {"headers": headers, "body": body}
         except BaseException as e:
             if cache.has(cache_name+"_offline"):
                 return False

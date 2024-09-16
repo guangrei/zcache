@@ -1,7 +1,7 @@
 # -*-coding:utf8;-*-
 from zcache.Class.Database import Database
-from zcache.Class.Queue import Queue  # noqa
-from zcache.Class.SmartRequest import SmartRequest # noqa
+from zcache.Extras.Queue import Queue  # noqa
+from zcache.Extras.SmartRequest import SmartRequest # noqa
 
 
 Cache = Database

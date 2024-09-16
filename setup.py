@@ -15,7 +15,7 @@ setup(
     license='MIT',
     author="guangrei",
     author_email="myawn@pm.me",
-    description="Key Value Database/Cache with multiple storage and plugins",
+    description="Key Value Database/Cache with abstract storage and plugins",
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords="cache key value file json",
