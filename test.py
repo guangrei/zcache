@@ -10,7 +10,7 @@ class MyRequest:
 
     def get():
         r = requests.get(MyRequest.url)
-        return dict(r.headers), r.text
+        return dict(r.headers), r.content
 
 
 class CacheTest(unittest.TestCase):
@@ -26,7 +26,7 @@ class CacheTest(unittest.TestCase):
         self.assertEqual(c.has("foo"), False)
         self.assertEqual(c.set("spam", "eggs", ttl=3), True)
         self.assertEqual(c.has("spam"), True)
-        time.sleep(3)
+        time.sleep(1)
         self.assertEqual(c.has("spam"), False)
         self.assertEqual(c.size(), 0)
 
