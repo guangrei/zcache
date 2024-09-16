@@ -10,14 +10,14 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 setup(
     name='zcache',
-    version='v1.0.2',
+    version='v1.0.3',
     packages=['zcache',],
     license='MIT',
     author="guangrei",
     author_email="myawn@pm.me",
-    description="PyZCache is dependency free python key value cache based file storage and json serialize",
+    description="Key Value Database/Cache with multiple storage and plugins",
     long_description=long_description,
     long_description_content_type='text/markdown',
     keywords="cache key value file json",
-    url="https://github.com/guangrei/PyZCache",
+    url="https://github.com/guangrei/zcache",
 )
