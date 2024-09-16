@@ -5,7 +5,6 @@ from zcache.Class.SmartRequest import SmartRequest # noqa
 
 
 Cache = Database
-AsyncCache = AsyncDatabase
 __version__ = "1.0.3"
 __author__ = "Guangrei <myawn@pm.me>"
 __license__ = "MIT"

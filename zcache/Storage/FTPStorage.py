@@ -57,7 +57,7 @@ class FTPStorage(Storage):
             with FTP(self.host) as ftp:
                 ftp.login(user=self.user, passwd=self.password)
                 # Mendownload file ke memory
-                ftp.retrbinary(f"RETR {remote_file_path}", memory_file.write)
+                ftp.retrbinary("RETR {}".format(remote_file_path), memory_file.write)
 
                 # Pindahkan pointer ke awal agar siap untuk dibaca
                 memory_file.seek(0)
@@ -66,7 +66,7 @@ class FTPStorage(Storage):
                 return memory_file.read()
         else:
             # Mendownload file ke memory
-            self.connection.retrbinary(f"RETR {remote_file_path}", memory_file.write)
+            self.connection.retrbinary("RETR {}".format(remote_file_path), memory_file.write)
 
             # Pindahkan pointer ke awal agar siap untuk dibaca
             memory_file.seek(0)
@@ -82,9 +82,9 @@ class FTPStorage(Storage):
             with FTP(self.host) as ftp:
                 ftp.login(user=self.user, passwd=self.password)
                 # Mengunggah file dari memory ke FTP server
-                ftp.storbinary(f"STOR {remote_file_path}", memory_file)
+                ftp.storbinary("STOR {}".format(remote_file_path), memory_file)
         else:
-            self.connection.storbinary(f"STOR {remote_file_path}", memory_file)
+            self.connection.storbinary("STOR {}".format(remote_file_path), memory_file)
 
     def exists(self, remote_path):
         if not self.persistent == "True":
