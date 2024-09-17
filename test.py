@@ -26,7 +26,7 @@ class CacheTest(unittest.TestCase):
         self.assertEqual(c.has("foo"), False)
         self.assertEqual(c.set("spam", "eggs", ttl=3), True)
         self.assertEqual(c.has("spam"), True)
-        time.sleep(1)
+        time.sleep(3)
         self.assertEqual(c.has("spam"), False)
         self.assertEqual(c.size(), 0)
 
