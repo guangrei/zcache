@@ -15,8 +15,8 @@ class Queue:
     - size(): Mendapatkan jumlah item dalam queue.
     """
 
-    def __init__(self, path="queue.json", storage=BaseFileStorage):
-        self.q = Database(path=path, storage=BaseFileStorage)
+    def __init__(self, path="queue.json", storage=BaseFileStorage, **kwargs):
+        self.q = Database(path=path, storage=BaseFileStorage, **kwargs)
         self._stack_load()
 
     def put(self, item, id=str(uuid.uuid4())):
@@ -27,9 +27,12 @@ class Queue:
             raise ValueError
         queue = self._stack_load()
         queue.append(id)
-        self.q.set(id, item)
-        self._stack_update(queue)
-        return id
+        a = self.q.set(id, item)
+        if a:
+            self._stack_update(queue)
+            return id
+        else:
+            return None
 
     def get(self):
         """Menghapus dan mengembalikan item pertama dari queue."""

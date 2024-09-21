@@ -96,7 +96,7 @@ class MyRequest:
 req = SmartRequest(MyRequest, cache_path="/tmp/request2.cache")
 ```
 
-> from zcache 1.0.3 SmartRequest body support str & bytes and already use BytesCachePlugins to store large file/content.
+> from zcache v1.0.3 SmartRequest body support bytes and already use BytesCachePlugins to store large file/content.
 
 2. Queue
 
@@ -104,9 +104,8 @@ req = SmartRequest(MyRequest, cache_path="/tmp/request2.cache")
 from zcache.Extras.Queue import Queue
 
 q = Queue()
-q.put("test", id="123") # id must be a string and optional (default random uuid)
-q.exists("123")
-q.peek() # view top item  without enqueue
+id = q.put("test")
+q.exists(id)
 q.empty()
 q.size()
 q.get()
