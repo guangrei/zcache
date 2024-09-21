@@ -10,7 +10,7 @@ with open(path.join(this_directory, 'README.md')) as f:
 
 setup(
     name='zcache',
-    version='v1.0.4',
+    version='v1.0.5',
     packages=['zcache',],
     license='MIT',
     author="guangrei",
