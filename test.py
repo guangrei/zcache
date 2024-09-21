@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from zcache import Cache, SmartRequest
+from zcache import Cache, SmartRequest, Queue
 import requests
 import time
 import unittest
@@ -46,6 +46,18 @@ class CacheTest(unittest.TestCase):
                          cache_path='/tmp/request2.cache')
         self.assertEqual(r.response["body"], s.response["body"])
 
+    def test_queue(self):
+        q = Queue()
+        id = q.put("test")
+        self.assertEqual(q.exists(id), True)
+        self.assertEqual(q.peek(), "test")
+        self.assertEqual(q.size(), 1)
+        self.assertEqual(q.empty(), False)
+        self.assertEqual(q.get(), "test")
+        self.assertEqual(q.size(), 0)
+        self.assertEqual(q.empty(), True)
+        self.assertEqual(q.exists(id), False)
+        
 
 if __name__ == "__main__":
     unittest.main()

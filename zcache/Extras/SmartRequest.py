@@ -33,7 +33,7 @@ class SmartRequest:
     A class for making Smart HTTP requests with caching capabilities using PyZCache.
     """
 
-    def __init__(self, url, cache_path=None, cache_time=120, offline_ttl=604800, **kwargs):
+    def __init__(self, url, cache_path="smartrequest.json", cache_time=120, offline_ttl=604800, **kwargs):
         if not isinstance(url, str):
             cache_name = url.url
         else:
