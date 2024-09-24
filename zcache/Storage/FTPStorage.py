@@ -1,5 +1,5 @@
 # -*-coding:utf8;-*-
-import zcache
+from zcache.version import __version__
 from zcache.Interface.Storage import Storage
 import time
 import json
@@ -34,7 +34,7 @@ class FTPStorage(Storage):
     def create(self, path):
         data = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
-        data["version"] = zcache.__version__
+        data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
         data["data"] = {}
         data["limit"] = 0
@@ -66,7 +66,9 @@ class FTPStorage(Storage):
                 return memory_file.read()
         else:
             # Mendownload file ke memory
-            self.connection.retrbinary("RETR {}".format(remote_file_path), memory_file.write)
+            self.connection.retrbinary(
+                "RETR {}".format(remote_file_path), memory_file.write
+            )
 
             # Pindahkan pointer ke awal agar siap untuk dibaca
             memory_file.seek(0)

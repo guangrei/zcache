@@ -15,7 +15,7 @@ class Queue:
     - size(): Mendapatkan jumlah item dalam queue.
     """
 
-    def __init__(self, path="queue.json", storage=BaseFileStorage,limit=0, **kwargs):
+    def __init__(self, path="queue.json", storage=BaseFileStorage, limit=0, **kwargs):
         self.limit = limit
         self.q = Database(path=path, storage=BaseFileStorage, **kwargs)
         self._stack_load()
@@ -30,14 +30,14 @@ class Queue:
         if self.limit > 0:
             if len(queue) < self.limit:
                 queue.append(id)
-                a = self.q.set(id, item)
+                self.q.set(id, item)
                 self._stack_update(queue)
                 return id
             else:
                 return None
         else:
             queue.append(id)
-            a = self.q.set(id, item)
+            self.q.set(id, item)
             self._stack_update(queue)
             return id
 

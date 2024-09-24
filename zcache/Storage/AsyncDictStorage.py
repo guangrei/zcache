@@ -2,20 +2,22 @@
 from zcache.version import __version__
 from zcache.Interface.Storage import Storage
 import time
+from asyncinit import asyncinit
 
 
-class DictStorage(Storage):
+@asyncinit
+class AsyncDictStorage(Storage):
     database = {}
     filesystem = False
 
-    def __init__(self, path):
+    async def __init__(self, path):
         if not isinstance(path, str):
             raise TypeError
         if path not in self.database:
-            self.create(path)
+            await self.create(path)
         self.path = path
 
-    def create(self, path):
+    async def create(self, path):
         data = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = __version__
@@ -24,8 +26,8 @@ class DictStorage(Storage):
         data["limit"] = 0
         self.database[path] = data
 
-    def load(self):
+    async def load(self):
         return self.database[self.path]
 
-    def save(self, data):
+    async def save(self, data):
         self.database[self.path] = data

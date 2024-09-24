@@ -5,7 +5,7 @@
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)
 
-zcache is pure python implementation of key value Cache/Database with abstract storage and plugins support.
+zcache is pure python implementation of key value Cache/Database with abstract storage, plugins and asynchronous support.
 
 ## Installation
 ```

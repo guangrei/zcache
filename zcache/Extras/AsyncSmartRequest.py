@@ -22,17 +22,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from zcache.Class.Database import Database
-from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
-from urllib import request
+from zcache.Class.AsyncDatabase import AsyncDatabase
+from zcache.Plugins.AsyncBytesCachePlugins import AsyncBytesCachePlugins
+from asyncinit import asyncinit
+import aiohttp
 
 
-class SmartRequest:
+@asyncinit
+class AsyncSmartRequest:
     """
     A class for making Smart HTTP requests with caching capabilities using PyZCache.
     """
 
-    def __init__(
+    async def __init__(
         self,
         url,
         cache_path="smartrequest.json",
@@ -44,37 +46,44 @@ class SmartRequest:
             cache_name = url.url
         else:
             cache_name = url
-        cache = Database(path=cache_path, plugins=BytesCachePlugins, **kwargs)
-        if cache.has(cache_name):
-            self.response = cache.get(cache_name)
+        cache = await AsyncDatabase(
+            path=cache_path, plugins=AsyncBytesCachePlugins, **kwargs
+        )
+        cek = await cache.has(cache_name)
+        if cek:
+            self.response = await cache.get(cache_name)
             self.is_loaded_from_cache = True
         else:
-            r = self._makeRequest(url, cache_name, cache)
+            r = await self._makeRequest(url, cache_name, cache)
             if r is not False:
-                cache.set(cache_name, r, ttl=cache_time)
-                cache.set(cache_name + "_offline", r, ttl=offline_ttl)
+                await cache.set(cache_name, r, ttl=cache_time)
+                await cache.set(cache_name + "_offline", r, ttl=offline_ttl)
                 self.response = r
                 self.is_loaded_from_cache = False
             else:
-                self.response = cache.get(cache_name + "_offline")
+                self.response = await cache.get(cache_name + "_offline")
                 self.is_loaded_from_cache = True
 
-    def _makeRequest(self, url, cache_name, cache):
+    async def _makeRequest(self, url, cache_name, cache):
         if not isinstance(url, str):
             try:
-                headers, body = url.get()
+                headers, body = await url.get()
                 return {"headers": headers, "body": body}
             except BaseException as e:
-                if cache.has(cache_name + "_offline"):
+                cek = await cache.has(cache_name + "_offline")
+                if cek:
                     return False
                 else:
                     raise Exception(e)
         try:
-            response = request.urlopen(url)
-            headers, body = (dict(response.info()), response.read())
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    ret = await resp.read()
+            headers, body = (dict(resp.headers), ret)
             return {"headers": headers, "body": body}
         except BaseException as e:
-            if cache.has(cache_name + "_offline"):
+            cek = await cache.has(cache_name + "_offline")
+            if cek:
                 return False
             else:
                 raise Exception(e)

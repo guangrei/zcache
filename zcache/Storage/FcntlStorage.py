@@ -1,5 +1,5 @@
 # -*-coding:utf8;-*-
-import zcache
+from zcache.version import __version__
 from zcache.Interface.Storage import Storage
 import time
 import json
@@ -36,7 +36,7 @@ class FcntlStorage(Storage):
     def create(self, path):
         data = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
-        data["version"] = zcache.__version__
+        data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
         data["data"] = {}
         data["limit"] = 0

@@ -1,10 +1,10 @@
 # -*-coding:utf8;-*-
 from zcache.Class.Database import Database
-from zcache.Extras.Queue import Queue  # noqa
-from zcache.Extras.SmartRequest import SmartRequest # noqa
+from zcache.Class.AsyncDatabase import AsyncDatabase
 
 
 Cache = Database
-__version__ = "1.0.3"
+AsyncCache = AsyncDatabase
+__version__ = "2.0.0"
 __author__ = "Guangrei <myawn@pm.me>"
 __license__ = "MIT"
