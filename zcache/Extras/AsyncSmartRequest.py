@@ -2,7 +2,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2022 PyZCache https://github.com/guangrei/PyZCache
+Copyright (c) 2022 zcache https://github.com/guangrei/zcache
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import aiohttp
 @asyncinit
 class AsyncSmartRequest:
     """
-    A class for making Smart HTTP requests with caching capabilities using PyZCache.
+    A class for making Smart HTTP requests with caching capabilities using zcache.
     """
 
     async def __init__(

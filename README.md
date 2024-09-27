@@ -46,6 +46,23 @@ d.delete("one")  # delete one item from stack
 print(d.set("three", 3))  # True
 ```
 
+# Asynchronous
+
+example asynchronous usage
+
+```python
+import asyncio
+from zcache import AsyncCache
+
+async def main():
+    c = await AsyncCache()
+    await c.set("test", "OK")
+    print(await c.get("test"))
+
+if __name__ == '__main__':
+    asyncio.run(main())
+```
+
 # Storage and plugins
 
 you can change storage and use plugins, for example:
@@ -59,57 +76,26 @@ c = Cache(storage=BaseFileStorage, plugins=BytesCachePlugins)
 ```
 see list current available [storage](https://github.com/guangrei/zcache/tree/main/zcache/Storage) and [plugins](https://github.com/guangrei/zcache/tree/main/zcache/Plugins), you can also create your own storage and plugins.
 
-## Extras
+# Extras
 
-[extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several function based on zcache.
+[Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several function based on zcache.
 
-1. SmartRequest
+1. [SmartRequest](https://github.com/guangrei/zcache/tree/main/tests_smartrequests.py)
 
-`SmartRequest` is Simple HTTP Client with smart caching system provide by `zcache`.
+`SmartRequest` is Simple HTTP Client with smart caching system based on `zcache`.
 
-example usage of `SmartRequest(url, cache_path, cache_time, offline_ttl)`:
-```python
-from zcache.Extras.SmartRequest import SmartRequest
+2.[AsyncSmartRequest](https://github.com/guangrei/zcache/tree/main/tests_smartrequests.py)
 
-req = SmartRequest("https://www.example.com", cache_path="/tmp/request1.cache")
-print(req.is_loaded_from_cache) # check if response is loaded from cache
-response_headers = req.response.get('headers')
-response_body = req.response.get('body')
-```
-to make advance request you can create custom url object with other library, for example:
-```python
-from zcache.Extras.SmartRequest import SmartRequest
+`AsyncSmartRequest` is asynchronous version of `SmartRequests`.
 
-class MyRequest:
-    url = "https://www.example.com"
-    
-    def get():
-        """
-        this method called by SmartRequest to retrieve content.
-        you can put request logic get, post etc and return tuple(headers=dict, body=str/bytes)
-        """
-        
-        ret = requests.get(MyRequest.url)
-        return dict(ret.headers), ret.content
+3. [Queue](https://github.com/guangrei/zcache/tree/main/tests_queue.py)
 
+`Queue` is Fifo Queue based on `zcache`.
 
-req = SmartRequest(MyRequest, cache_path="/tmp/request2.cache")
-```
+4. [AsyncQueue](https://github.com/guangrei/zcache/tree/main/tests_queue.py)
 
-> from zcache v1.0.3 SmartRequest body support bytes and already use BytesCachePlugins to store large file/content.
+`AsyncQueue` is asynchronous version of`zcache`.
 
-2. Queue
-
-```python
-from zcache.Extras.Queue import Queue
-
-q = Queue()
-id = q.put("test")
-q.exists(id)
-q.empty()
-q.size()
-q.get()
-```
 
 ## License
 
