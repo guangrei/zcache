@@ -31,12 +31,13 @@ import os
 
 
 class FileLock:
-    def __init__(self, filename):
+    def __init__(self, filename, mode):
         self.filename = filename
         self.file_handle = None
+        self.mode = mode
 
     def __enter__(self):
-        self.file_handle = open(self.filename, "a+")
+        self.file_handle = open(self.filename, self.mode)
         fcntl.flock(self.file_handle, fcntl.LOCK_EX)
         self.file_handle.seek(0)
         return self.file_handle
@@ -53,9 +54,9 @@ class FcntlStorage(Storage):
     def __init__(self, path):
         if not isinstance(path, str):
             raise TypeError
+        self.path = path
         if not os.path.exists(path):
             self.create(path)
-        self.path = path
 
     def create(self, path):
         data = {}
@@ -64,14 +65,13 @@ class FcntlStorage(Storage):
         data["url"] = "https://github.com/guangrei/zcache"
         data["data"] = {}
         data["limit"] = 0
-        with FileLock(path) as f:
-            f.write(json.dumps(data))
+        self.save(data)
 
     def load(self):
-        with FileLock(self.path) as f:
+        with FileLock(self.path, mode="r") as f:
             return json.loads(f.read())
 
     def save(self, data):
         data = json.dumps(data)
-        with FileLock(self.path) as f:
+        with FileLock(self.path, mode="w") as f:
             f.write(data)
