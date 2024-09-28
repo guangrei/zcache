@@ -78,7 +78,7 @@ see list current available [storage](https://github.com/guangrei/zcache/tree/mai
 
 # Extras
 
-[Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several function based on zcache.
+[Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several module based on zcache.
 
 1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/tests/test_smartrequest.py)
 
