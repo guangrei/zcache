@@ -80,19 +80,19 @@ see list current available [storage](https://github.com/guangrei/zcache/tree/mai
 
 [Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several function based on zcache.
 
-1. [SmartRequest](https://github.com/guangrei/zcache/tree/main/tests/tests_smartrequests.py)
+1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/tests/tests_smartrequests.py)
 
 `SmartRequest` is Simple HTTP Client with smart caching system based on `zcache`.
 
-2.[AsyncSmartRequest](https://github.com/guangrei/zcache/tree/main/tests/tests_smartrequests.py)
+2.[AsyncSmartRequest](https://github.com/guangrei/zcache/blob/main/tests/tests_smartrequests.py)
 
 `AsyncSmartRequest` is asynchronous version of `SmartRequests`.
 
-3. [Queue](https://github.com/guangrei/zcache/tree/main/tests/tests_queue.py)
+3. [Queue](https://github.com/guangrei/zcache/blob/main/tests/tests_queue.py)
 
 `Queue` is Fifo Queue based on `zcache`.
 
-4. [AsyncQueue](https://github.com/guangrei/zcache/tree/main/tests/tests_queue.py)
+4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/tests/tests_queue.py)
 
 `AsyncQueue` is asynchronous version of`zcache`.
 
