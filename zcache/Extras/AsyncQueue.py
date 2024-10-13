@@ -25,7 +25,8 @@ THE SOFTWARE.
 from zcache.Class.AsyncDatabase import AsyncDatabase
 import uuid
 from zcache.Interface import AsyncStorageInterface
-from typing import Any, Optional, Union, List, Never
+from typing import Any, Optional, Union, List
+from typing_extensions import Never
 
 
 class AsyncQueue:

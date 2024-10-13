@@ -25,7 +25,8 @@ THE SOFTWARE.
 from zcache.Class.Database import Database
 import uuid
 from zcache.Interface import StorageInterface
-from typing import Any, Optional, Union, List, Never
+from typing import Any, Optional, Union, List
+from typing_extensions import Never
 
 
 class Queue:
