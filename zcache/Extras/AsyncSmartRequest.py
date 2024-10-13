@@ -1,54 +1,37 @@
 # -*- coding: utf-8 -*-
-"""
-The MIT License (MIT)
-
-Copyright (c) 2022 zcache https://github.com/guangrei/zcache
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-"""
 from zcache.Class.AsyncDatabase import AsyncDatabase
 from zcache.Plugins.AsyncBytesCachePlugins import AsyncBytesCachePlugins
-from asyncinit import asyncinit
 import aiohttp
+from typing import Any, Optional, Union, Dict
 
 
-@asyncinit
 class AsyncSmartRequest:
     """
     A class for making Smart HTTP requests with caching capabilities using zcache.
     """
 
-    async def __init__(
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self._async_args = args
+        self._async_kwargs = kwargs
+
+    async def init(self) -> None:
+        await self._init(*self._async_args, **self._async_kwargs)
+
+    async def _init(
         self,
-        url,
-        cache_path="smartrequest.json",
-        cache_time=120,
-        offline_ttl=604800,
-        **kwargs
-    ):
+        url: Any,
+        cache_path: Optional[str] = "smartrequest.json",
+        cache_time: int = 120,
+        offline_ttl: int = 604800,
+        **kwargs: Any
+    ) -> None:
         if not isinstance(url, str):
             cache_name = url.url
         else:
             cache_name = url
-        cache = await AsyncDatabase(
-            path=cache_path, plugins=AsyncBytesCachePlugins, **kwargs
-        )
+        plugins = AsyncBytesCachePlugins()
+        cache = AsyncDatabase(path=cache_path, plugins=plugins, **kwargs)
+        await cache.init()
         cek = await cache.has(cache_name)
         if cek:
             self.response = await cache.get(cache_name)
@@ -64,7 +47,9 @@ class AsyncSmartRequest:
                 self.response = await cache.get(cache_name + "_offline")
                 self.is_loaded_from_cache = True
 
-    async def _makeRequest(self, url, cache_name, cache):
+    async def _makeRequest(
+        self, url: Any, cache_name: str, cache: AsyncDatabase
+    ) -> Union[Dict[str, Any], bool, None]:
         if not isinstance(url, str):
             try:
                 headers, body = await url.get()

@@ -23,40 +23,46 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.version import __version__
-from zcache.Interface.Storage import Storage
+from zcache.Interface import StorageInterface
 import time
 import json
 import os
+from typing import Dict, Any
 
 
-class BaseFileStorage(Storage):
+class BaseFileStorage(StorageInterface):
 
-    filesystem = True
-
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         if not isinstance(path, str):
             raise TypeError
         if os.path.isdir(path):
             path = os.path.join(path, "zcache.json")
+        self._path = path
         if not os.path.exists(path):
             self.create(path)
-        self.path = path
 
-    def create(self, path):
-        data = {}
+    @property
+    def filesystem(self) -> bool:
+        return True
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    def create(self, path: str) -> None:
+        data: Dict[str, Any] = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
         data["data"] = {}
         data["limit"] = 0
-        with open(path, "w") as f:
-            f.write(json.dumps(data))
+        self.save(data)
 
-    def load(self):
-        with open(self.path, "r") as f:
-            return json.loads(f.read())
+    def load(self) -> Dict[str, Any]:
+        with open(self._path, "r") as f:
+            return json.loads(f.read())  # type: ignore[no-any-return]
 
-    def save(self, data):
-        data = json.dumps(data)
-        with open(self.path, "w") as f:
-            f.write(data)
+    def save(self, data: Dict[str, Any]) -> None:
+        json_encoded = json.dumps(data)
+        with open(self._path, "w") as f:
+            f.write(json_encoded)

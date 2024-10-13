@@ -1,3 +1,4 @@
+
 [![status workflow test](https://github.com/guangrei/zcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/zcache/actions) 
 [![status workflow build](https://github.com/guangrei/zcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/zcache/actions)
 
@@ -5,7 +6,7 @@
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)
 
-zcache is pure python implementation of key value Cache/Database with abstract storage, plugins and asynchronous support.
+zcache is pure typed Python implementation of key value Cache/Database with abstract storage, plugins and asynchronous support.
 
 ## Installation
 ```
@@ -55,7 +56,8 @@ import asyncio
 from zcache import AsyncCache
 
 async def main():
-    c = await AsyncCache()
+    c = AsyncCache()
+    await c.init()
     await c.set("test", "OK")
     print(await c.get("test"))
 
@@ -72,7 +74,10 @@ from zcache import Cache
 from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
 from zcache.Storage.BaseFileStorage import BaseFileStorage
 
-c = Cache(storage=BaseFileStorage, plugins=BytesCachePlugins)
+
+storage = BaseFileStorage("/tmp/zcache.json")
+plugins = BytesCachePlugins()
+c = Cache(storage=storage, plugins=plugins)
 ```
 see list current available [storage](https://github.com/guangrei/zcache/tree/main/zcache/Storage) and [plugins](https://github.com/guangrei/zcache/tree/main/zcache/Plugins), you can also create your own storage and plugins.
 
@@ -80,19 +85,19 @@ see list current available [storage](https://github.com/guangrei/zcache/tree/mai
 
 [Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several module based on zcache.
 
-1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/tests/test_smartrequest.py)
+1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_smartrequest.py)
 
 `SmartRequest` is Simple HTTP Client with smart caching system based on `zcache`.
 
-2.[AsyncSmartRequest](https://github.com/guangrei/zcache/blob/main/tests/test_async_smartrequest.py)
+2.[AsyncSmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_async_smartrequest.py)
 
 `AsyncSmartRequest` is asynchronous version of `SmartRequests`.
 
-3. [Queue](https://github.com/guangrei/zcache/blob/main/tests/test_queue.py)
+3. [Queue](https://github.com/guangrei/zcache/blob/main/Tests/test_queue.py)
 
 `Queue` is Fifo Queue based on `zcache`.
 
-4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/tests/test_async_queue.py)
+4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/Tests/test_async_queue.py)
 
 `AsyncQueue` is asynchronous version of`zcache`.
 

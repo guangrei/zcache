@@ -22,13 +22,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from zcache.Storage.AsyncFileStorage import AsyncFileStorage
 from zcache.Class.AsyncDatabase import AsyncDatabase
 import uuid
-from asyncinit import asyncinit
+from zcache.Interface import AsyncStorageInterface
+from typing import Any, Optional, Union, List, Never
 
 
-@asyncinit
 class AsyncQueue:
     """Implementasi FIFO Queue.
 
@@ -40,17 +39,27 @@ class AsyncQueue:
     - size(): Mendapatkan jumlah item dalam queue.
     """
 
-    async def __init__(
-        self, path="queue.json", storage=AsyncFileStorage, limit=0, **kwargs
-    ):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self._async_args = args
+        self._async_kwargs = kwargs
+
+    async def init(self) -> None:
+        await self._init(*self._async_args, **self._async_kwargs)
+
+    async def _init(
+        self,
+        path: Optional[str] = "queue.json",
+        storage: Optional[AsyncStorageInterface] = None,
+        limit: int = 0,
+        **kwargs: Any
+    ) -> None:
         self.limit = limit
-        self.q = await AsyncDatabase(path=path, storage=storage, **kwargs)
+        self.q = AsyncDatabase(path=path, storage=storage, **kwargs)
+        await self.q.init()
         await self._stack_load()
 
-    async def put(self, item, id=str(uuid.uuid4())):
+    async def put(self, item: Any, id: str = str(uuid.uuid4())) -> Union[str, None]:
         """Menambahkan item ke dalam queue."""
-        if not isinstance(id, str):
-            raise TypeError
         if id == "__queue__":
             raise ValueError
         queue = await self._stack_load()
@@ -68,7 +77,7 @@ class AsyncQueue:
             await self._stack_update(queue)
             return id
 
-    async def get(self):
+    async def get(self) -> Any:
         """Menghapus dan mengembalikan item pertama dari queue."""
         queue = await self._stack_load()
         if len(queue) > 0:
@@ -80,7 +89,7 @@ class AsyncQueue:
         else:
             return None
 
-    async def peek(self):
+    async def peek(self) -> Any:
         """Melihat item pertama tanpa menghapusnya."""
         queue = await self._stack_load()
         if len(queue) > 0:
@@ -88,30 +97,28 @@ class AsyncQueue:
             ret = await self.q.get(id)
             return ret
 
-    async def _stack_load(self):
+    async def _stack_load(self) -> List[Union[Never, str]]:
         check = await self.q.has("__queue__")
         if not check:
             await self.q.set("__queue__", [])
             return []
         ret = await self.q.get("__queue__")
-        return ret
+        return ret  # type: ignore[no-any-return]
 
-    async def _stack_update(self, data):
+    async def _stack_update(self, data: List[Union[Never, str]]) -> None:
         await self.q.set("__queue__", data)
 
-    async def empty(self):
+    async def empty(self) -> bool:
         """Mengecek apakah queue kosong."""
         queue = await self._stack_load()
         return len(queue) == 0
 
-    async def size(self):
+    async def size(self) -> int:
         """Mendapatkan jumlah item dalam queue."""
         queue = await self._stack_load()
         return len(queue)
 
-    async def exists(self, id):
+    async def exists(self, id: Optional[str] = None) -> bool:
         """mengecek id queue"""
-        if not isinstance(id, str):
-            raise TypeError
         queue = await self._stack_load()
         return id in queue

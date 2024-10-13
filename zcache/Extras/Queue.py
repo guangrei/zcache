@@ -22,9 +22,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from zcache.Storage.BaseFileStorage import BaseFileStorage
 from zcache.Class.Database import Database
 import uuid
+from zcache.Interface import StorageInterface
+from typing import Any, Optional, Union, List, Never
 
 
 class Queue:
@@ -38,15 +39,19 @@ class Queue:
     - size(): Mendapatkan jumlah item dalam queue.
     """
 
-    def __init__(self, path="queue.json", storage=BaseFileStorage, limit=0, **kwargs):
+    def __init__(
+        self,
+        path: Optional[str] = "queue.json",
+        storage: Optional[StorageInterface] = None,
+        limit: int = 0,
+        **kwargs: Any
+    ) -> None:
         self.limit = limit
-        self.q = Database(path=path, storage=BaseFileStorage, **kwargs)
+        self.q = Database(path=path, storage=storage, **kwargs)
         self._stack_load()
 
-    def put(self, item, id=str(uuid.uuid4())):
+    def put(self, item: Any, id: str = str(uuid.uuid4())) -> Union[str, None]:
         """Menambahkan item ke dalam queue."""
-        if not isinstance(id, str):
-            raise TypeError
         if id == "__queue__":
             raise ValueError
         queue = self._stack_load()
@@ -64,7 +69,7 @@ class Queue:
             self._stack_update(queue)
             return id
 
-    def get(self):
+    def get(self) -> Any:
         """Menghapus dan mengembalikan item pertama dari queue."""
         queue = self._stack_load()
         if len(queue) > 0:
@@ -76,35 +81,33 @@ class Queue:
         else:
             return None
 
-    def peek(self):
+    def peek(self) -> Any:
         """Melihat item pertama tanpa menghapusnya."""
         queue = self._stack_load()
         if len(queue) > 0:
             id = queue[0]
             return self.q.get(id)
 
-    def _stack_load(self):
+    def _stack_load(self) -> List[Union[Never, str]]:
         if not self.q.has("__queue__"):
             self.q.set("__queue__", [])
             return []
-        return self.q.get("__queue__")
+        return self.q.get("__queue__")  # type: ignore[no-any-return]
 
-    def _stack_update(self, data):
+    def _stack_update(self, data: List[Union[Never, str]]) -> None:
         self.q.set("__queue__", data)
 
-    def empty(self):
+    def empty(self) -> bool:
         """Mengecek apakah queue kosong."""
         queue = self._stack_load()
         return len(queue) == 0
 
-    def size(self):
+    def size(self) -> int:
         """Mendapatkan jumlah item dalam queue."""
         queue = self._stack_load()
         return len(queue)
 
-    def exists(self, id):
+    def exists(self, id: Optional[str] = None) -> bool:
         """Mengecek id queue"""
-        if not isinstance(id, str):
-            raise TypeError
         queue = self._stack_load()
         return id in queue

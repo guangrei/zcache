@@ -23,23 +23,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.version import __version__
-from zcache.Interface.Storage import Storage
+from zcache.Interface import StorageInterface
+from typing import Dict, Any
 import time
 
 
-class DictStorage(Storage):
-    database = {}
-    filesystem = False
+class DictStorage(StorageInterface):
+    database: Dict[str, Any] = {}
 
-    def __init__(self, path):
-        if not isinstance(path, str):
-            raise TypeError
+    def __init__(self, path: str = "zcache.json") -> None:
         if path not in self.database:
             self.create(path)
-        self.path = path
+        self._path = path
 
-    def create(self, path):
-        data = {}
+    @property
+    def filesystem(self) -> bool:
+        return False
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    def create(self, path: str) -> None:
+        data: Dict[str, Any] = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
@@ -47,8 +53,8 @@ class DictStorage(Storage):
         data["limit"] = 0
         self.database[path] = data
 
-    def load(self):
-        return self.database[self.path]
+    def load(self) -> Dict[str, Any]:
+        return self.database[self._path]  # type: ignore[no-any-return]
 
-    def save(self, data):
-        self.database[self.path] = data
+    def save(self, data: Dict[str, Any]) -> None:
+        self.database[self._path] = data

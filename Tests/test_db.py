@@ -6,7 +6,7 @@ import time
 
 class DBTest(unittest.TestCase):
 
-    def test_database_or_cache(self):
+    def test_database_or_cache(self) -> None:
         c = Database("/tmp/test.cache")
         c.reset()
         self.assertEqual(c.set("foo", "bar"), True)
@@ -21,7 +21,7 @@ class DBTest(unittest.TestCase):
         self.assertEqual(c.has("spam"), False)
         self.assertEqual(c.size(), 0)
 
-    def test_limit(self):
+    def test_limit(self) -> None:
         d = Database("/tmp/test2.cache", limit=2)
         d.reset()
         self.assertEqual(d.set("one", 1), True)

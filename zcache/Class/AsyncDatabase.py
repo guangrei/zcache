@@ -23,57 +23,73 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.Storage.AsyncFileStorage import AsyncFileStorage
-from zcache.Interface.Storage import Storage as StorageInterface
-from zcache.Interface.Plugins import Plugins as PluginsInterface
+from zcache.Interface import (
+    AsyncStorageInterface,
+    AsyncPluginsInterface,
+    AsyncDatabaseInterface,
+)
 import time
-from asyncinit import asyncinit
+from typing import Any, Optional, Tuple, Dict
 
 
-@asyncinit
-class AsyncDatabase:
+class AsyncDatabase(AsyncDatabaseInterface):
 
-    async def __init__(
+    def __init__(
         self,
-        path=None,
-        limit=0,
-        storage=AsyncFileStorage,
-        plugins=None,
-        StorageArgs=None,
-    ):
-        if plugins is not None and not issubclass(plugins, PluginsInterface):
-            raise NotImplementedError
+        path: Optional[str] = None,
+        limit: int = 0,
+        storage: Optional[AsyncStorageInterface] = None,
+        plugins: Optional[AsyncPluginsInterface] = None,
+    ) -> None:
+        self._asyncargs = (path, limit, storage, plugins)
+
+    async def init(self) -> None:
+        await self._init(*self._asyncargs)
+
+    async def _init(
+        self,
+        path: Optional[str] = None,
+        limit: Optional[int] = 0,
+        storage: Optional[AsyncStorageInterface] = None,
+        plugins: Optional[AsyncPluginsInterface] = None,
+    ) -> None:
         self.plugins = plugins
-        if not issubclass(storage, StorageInterface):
-            raise NotImplementedError
+        self.__limit = limit
         if path is not None:
             path = path
         else:
             path = "zcache.json"
-        if StorageArgs is not None:
-            if isinstance(StorageArgs, dict):
-                self.storage = await storage(path, **StorageArgs)
-            else:
-                raise TypeError
+        if storage is not None:
+            self._storage = storage
         else:
-            self.storage = await storage(path)
-        self.__limit = limit
+            s = AsyncFileStorage(path)
+            await s.init()
+            self._storage = s
 
-    async def __updatefile(self):
-        await self.storage.save(self.databases)
+    @property
+    def databases(self) -> Dict[str, Any]:
+        return self._databases
 
-    async def __loadfile(self):
-        self.databases = await self.storage.load()
-        self.databases["limit"] = self.__limit
+    @property
+    def storage(self) -> AsyncStorageInterface:
+        return self._storage
 
-    async def __exists(self, key):
+    async def __updatefile(self) -> None:
+        await self._storage.save(self._databases)
+
+    async def __loadfile(self) -> None:
+        self._databases = await self._storage.load()
+        self._databases["limit"] = self.__limit
+
+    async def __exists(self, key: str) -> Tuple[bool, bool]:
         try:
-            t = self.databases["data"][key]
+            t = self._databases["data"][key]
             if t["ttl"] != 0:
                 sisa = int(time.time()) - t["time"]
                 if sisa >= t["ttl"]:
                     if self.plugins is not None:
                         await self.plugins.on_expired(self, key)
-                    del self.databases["data"][key]
+                    del self._databases["data"][key]
                     await self.__updatefile()
                     return False, False
                 else:
@@ -83,26 +99,22 @@ class AsyncDatabase:
         except KeyError:
             return False, False
 
-    async def __set(self, key, value, ttl=0):
+    async def __set(self, key: str, value: Any, ttl: Optional[int] = 0) -> None:
         if self.plugins is not None:
             value = await self.plugins.on_write(self, key, value)
-        data = {}
+        data: Dict[str, Any] = {}
         data["time"] = int(time.time())
-        data["ttl"] = int(ttl)
+        data["ttl"] = ttl
         data["content"] = value
-        self.databases["data"][key] = data
+        self._databases["data"][key] = data
         await self.__updatefile()
 
-    async def has(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    async def has(self, key: str) -> bool:
         await self.__loadfile()
         r, v = await self.__exists(key)
         return r
 
-    async def get(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    async def get(self, key: str) -> Any:
         await self.__loadfile()
         r, v = await self.__exists(key)
         if r:
@@ -113,13 +125,11 @@ class AsyncDatabase:
         else:
             return False
 
-    async def set(self, key, value, ttl=0):
-        if not isinstance(key, str):
-            raise TypeError
+    async def set(self, key: str, value: Any, ttl: int = 0) -> bool:
         # to optimize, __loadfile() not called here because already called in size()
         size = await self.size()
-        if self.databases["limit"] != 0:
-            if self.databases["limit"] == size:
+        if self._databases["limit"] != 0:
+            if self._databases["limit"] == size:
                 if self.plugins is not None:
                     await self.plugins.on_limit(self, key, value, ttl)
                 return False
@@ -130,13 +140,11 @@ class AsyncDatabase:
             await self.__set(key, value, ttl)
             return True
 
-    async def delete(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    async def delete(self, key: str) -> bool:
         # to optimize, __loadfile() not called here because already called in has()
         check = await self.has(key)
         if check:
-            del self.databases["data"][key]
+            del self._databases["data"][key]
             await self.__updatefile()
             if self.plugins is not None:
                 await self.plugins.on_delete(self, key)
@@ -144,12 +152,12 @@ class AsyncDatabase:
         else:
             return False
 
-    async def size(self):
+    async def size(self) -> int:
         await self.__loadfile()
-        ret = len(self.databases["data"])
+        ret = len(self._databases["data"])
         return ret
 
-    async def reset(self):
+    async def reset(self) -> None:
         await self.__loadfile()
-        self.databases["data"] = {}
+        self._databases["data"] = {}
         await self.__updatefile()

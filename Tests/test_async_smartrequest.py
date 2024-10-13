@@ -4,12 +4,14 @@ from unittest import IsolatedAsyncioTestCase
 
 
 class SmartRequestTest(IsolatedAsyncioTestCase):
-    async def test_request(self):
-        s = await AsyncSmartRequest(
+    async def test_request(self) -> None:
+        s = AsyncSmartRequest(
             "https://www.example.com", cache_path="/tmp/async_smart_request_test.json"
         )
+        await s.init()
         self.assertEqual(s.is_loaded_from_cache, False)
-        s = await AsyncSmartRequest(
+        s = AsyncSmartRequest(
             "https://www.example.com", cache_path="/tmp/async_smart_request_test.json"
         )
+        await s.init()
         self.assertEqual(s.is_loaded_from_cache, True)

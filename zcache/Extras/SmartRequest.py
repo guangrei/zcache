@@ -25,26 +25,27 @@ THE SOFTWARE.
 from zcache.Class.Database import Database
 from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
 from urllib import request
+from typing import Any, Optional, Union, Dict
 
 
 class SmartRequest:
     """
-    A class for making Smart HTTP requests with caching capabilities using zcache.
+    A class for making Smart HTTP requests with caching capabilities using PyZCache.
     """
 
     def __init__(
         self,
-        url,
-        cache_path="smartrequest.json",
-        cache_time=120,
-        offline_ttl=604800,
-        **kwargs
-    ):
+        url: Any,
+        cache_path: Optional[str] = "smartrequest.json",
+        cache_time: int = 120,
+        offline_ttl: int = 604800,
+        **kwargs: Any
+    ) -> None:
         if not isinstance(url, str):
             cache_name = url.url
         else:
             cache_name = url
-        cache = Database(path=cache_path, plugins=BytesCachePlugins, **kwargs)
+        cache = Database(path=cache_path, plugins=BytesCachePlugins(), **kwargs)
         if cache.has(cache_name):
             self.response = cache.get(cache_name)
             self.is_loaded_from_cache = True
@@ -59,7 +60,9 @@ class SmartRequest:
                 self.response = cache.get(cache_name + "_offline")
                 self.is_loaded_from_cache = True
 
-    def _makeRequest(self, url, cache_name, cache):
+    def _makeRequest(
+        self, url: Any, cache_name: str, cache: Database
+    ) -> Union[Dict[str, Any], bool, None]:
         if not isinstance(url, str):
             try:
                 headers, body = url.get()

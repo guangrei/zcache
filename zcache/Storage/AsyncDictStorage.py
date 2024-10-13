@@ -23,25 +23,35 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.version import __version__
-from zcache.Interface.Storage import Storage
+from zcache.Interface import AsyncStorageInterface
 import time
-from asyncinit import asyncinit
+from typing import Dict, Any
 
 
-@asyncinit
-class AsyncDictStorage(Storage):
-    database = {}
-    filesystem = False
+class AsyncDictStorage(AsyncStorageInterface):
+    database: Dict[str, Any] = {}
 
-    async def __init__(self, path):
-        if not isinstance(path, str):
-            raise TypeError
+    def __init__(self, path: str = "zcache.json") -> None:
+        self._path = path
+
+    @property
+    def filesystem(self) -> bool:
+        return False
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    async def init(self) -> None:
+        await self._init(path=self._path)
+
+    async def _init(self, path: str) -> None:
         if path not in self.database:
             await self.create(path)
-        self.path = path
+        self._path = path
 
-    async def create(self, path):
-        data = {}
+    async def create(self, path: str) -> None:
+        data: Dict[str, Any] = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
@@ -49,8 +59,8 @@ class AsyncDictStorage(Storage):
         data["limit"] = 0
         self.database[path] = data
 
-    async def load(self):
-        return self.database[self.path]
+    async def load(self) -> Dict[str, Any]:
+        return self.database[self._path]  # type: ignore[no-any-return]
 
-    async def save(self, data):
-        self.database[self.path] = data
+    async def save(self, data: Dict[str, Any]) -> None:
+        self.database[self._path] = data

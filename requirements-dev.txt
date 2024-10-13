@@ -1,2 +1,4 @@
-flake8
 requests
+flake8
+mypy
+types-requests

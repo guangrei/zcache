@@ -23,26 +23,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.version import __version__
-from zcache.Interface.Storage import Storage
+from zcache.Interface import StorageInterface
 import time
 import json
 import os
 from ftplib import FTP
 from io import BytesIO
+from typing import Dict, Any, Tuple, Union
 
 
-class FTPStorage(Storage):
-    filesystem = True
+class FTPStorage(StorageInterface):
 
-    def __init__(self, path, host=None, user=None, password=None, persistent=None):
+    def __init__(
+        self,
+        path: str,
+        host: str = "",
+        user: str = "",
+        password: str = "",
+        persistent: str = "",
+    ):
         self.host = os.environ.get("FTPHOST", host)
         self.user = os.environ.get("FTPUSER", user)
         self.password = os.environ.get("FTPPASSWORD", password)
         self.persistent = os.environ.get("FTPPERSISTENT", persistent)
-        self.path = path
-
-        if not isinstance(path, str):
-            raise TypeError
+        self._path = path
         if self.persistent == "True":
             import atexit
 
@@ -52,10 +56,18 @@ class FTPStorage(Storage):
         exists, _type = self.exists(path)
         if not exists:
             self.create(path)
-        self.path = path
+        self._path = path
 
-    def create(self, path):
-        data = {}
+    @property
+    def filesystem(self) -> bool:
+        return True
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    def create(self, path: str) -> None:
+        data: Dict[str, Any] = {}
         data["first_created"] = time.strftime("%Y-%m-%d %H:%M:%S")
         data["version"] = __version__
         data["url"] = "https://github.com/guangrei/zcache"
@@ -63,16 +75,16 @@ class FTPStorage(Storage):
         data["limit"] = 0
         self.save(data)
 
-    def load(self):
-        data = self.read(self.path)
-        return json.loads(data.decode("utf-8"))
+    def load(self) -> Dict[str, Any]:
+        data = self.read(self._path)
+        return json.loads(data.decode("utf-8"))  # type: ignore[no-any-return]
 
-    def save(self, data):
-        data = json.dumps(data)
-        data = data.encode("utf-8")
-        self.write(self.path, data)
+    def save(self, data: Dict[str, Any]) -> None:
+        json_encoded = json.dumps(data)
+        json_encoded_bytes = json_encoded.encode("utf-8")
+        self.write(self._path, json_encoded_bytes)
 
-    def read(self, remote_file_path):
+    def read(self, remote_file_path: str) -> bytes:
         # Menggunakan BytesIO untuk menyimpan data file di memory
         memory_file = BytesIO()
         if not self.persistent == "True":
@@ -99,7 +111,7 @@ class FTPStorage(Storage):
             # Mengembalikan isi file
             return memory_file.read()
 
-    def write(self, remote_file_path, data):
+    def write(self, remote_file_path: str, data: bytes) -> None:
         # Menggunakan BytesIO untuk membaca data file dari memory
         memory_file = BytesIO(data)
         if not self.persistent == "True":
@@ -111,7 +123,7 @@ class FTPStorage(Storage):
         else:
             self.connection.storbinary("STOR {}".format(remote_file_path), memory_file)
 
-    def exists(self, remote_path):
+    def exists(self, remote_path: str) -> Tuple[bool, Union[bool, str]]:
         if not self.persistent == "True":
             # Koneksi ke FTP server
             with FTP(self.host) as ftp:
@@ -147,7 +159,7 @@ class FTPStorage(Storage):
                     # Jika keduanya gagal, berarti path tidak ada
                     return False, "file"
 
-    def mkdir(self, remote_dir_path):
+    def mkdir(self, remote_dir_path: str) -> bool:
         if not self.persistent == "True":
             # Koneksi ke FTP server
             with FTP(self.host) as ftp:
@@ -169,7 +181,7 @@ class FTPStorage(Storage):
                 # Jika terjadi kesalahan, return False
                 return False
 
-    def delete(self, remote_file_path):
+    def delete(self, remote_file_path: str) -> bool:
         if not self.persistent == "True":
             # Koneksi ke FTP server
             with FTP(self.host) as ftp:
@@ -191,5 +203,5 @@ class FTPStorage(Storage):
                 # Jika terjadi kesalahan, return False
                 return False
 
-    def exit(self):
+    def exit(self) -> None:
         self.connection.quit()

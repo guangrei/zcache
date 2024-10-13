@@ -4,7 +4,7 @@ from zcache.Extras.Queue import Queue
 
 
 class QueueTest(unittest.TestCase):
-    def test_queue(self):
+    def test_queue(self) -> None:
         q = Queue("/tmp/test_queue.json")
         id = q.put("test")
         self.assertEqual(q.exists(id), True)
@@ -16,7 +16,7 @@ class QueueTest(unittest.TestCase):
         self.assertEqual(q.empty(), True)
         self.assertEqual(q.exists(id), False)
 
-    def test_queue_limit(self):
+    def test_queue_limit(self) -> None:
         q = Queue("/tmp/test_queue_limit.json", limit=2)
         id = q.put("test1")
         self.assertEqual(q.exists(id), True)

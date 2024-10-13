@@ -23,55 +23,52 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
 from zcache.Storage.BaseFileStorage import BaseFileStorage
-from zcache.Interface.Storage import Storage as StorageInterface
-from zcache.Interface.Plugins import Plugins as PluginsInterface
+from zcache.Interface import StorageInterface, PluginsInterface, DatabaseInterface
 import time
+from typing import Any, Optional, Tuple, Dict
 
 
-class Database:
+class Database(DatabaseInterface):
 
     def __init__(
         self,
-        path=None,
-        limit=0,
-        storage=BaseFileStorage,
-        plugins=None,
-        StorageArgs=None,
-    ):
-        if plugins is not None and not issubclass(plugins, PluginsInterface):
-            raise NotImplementedError
-        self.plugins = plugins
-        if not issubclass(storage, StorageInterface):
-            raise NotImplementedError
+        path: Optional[str] = None,
+        limit: int = 0,
+        storage: Optional[StorageInterface] = None,
+        plugins: Optional[PluginsInterface] = None,
+    ) -> None:
+        self.plugins = plugins or None
         if path is not None:
             path = path
         else:
             path = "zcache.json"
-        if StorageArgs is not None:
-            if isinstance(StorageArgs, dict):
-                self.storage = storage(path, **StorageArgs)
-            else:
-                raise TypeError
-        else:
-            self.storage = storage(path)
+        self._storage = storage or BaseFileStorage(path)
         self.__limit = limit
 
-    def __updatefile(self):
-        self.storage.save(self.databases)
+    @property
+    def databases(self) -> Dict[str, Any]:
+        return self._databases
 
-    def __loadfile(self):
-        self.databases = self.storage.load()
-        self.databases["limit"] = self.__limit
+    @property
+    def storage(self) -> StorageInterface:
+        return self._storage
 
-    def __exists(self, key):
+    def __updatefile(self) -> None:
+        self._storage.save(self._databases)
+
+    def __loadfile(self) -> None:
+        self._databases = self._storage.load()
+        self._databases["limit"] = self.__limit
+
+    def __exists(self, key: str) -> Tuple[bool, bool]:
         try:
-            t = self.databases["data"][key]
+            t = self._databases["data"][key]
             if t["ttl"] != 0:
                 sisa = int(time.time()) - t["time"]
                 if sisa >= t["ttl"]:
                     if self.plugins is not None:
                         self.plugins.on_expired(self, key)
-                    del self.databases["data"][key]
+                    del self._databases["data"][key]
                     self.__updatefile()
                     return False, False
                 else:
@@ -81,26 +78,24 @@ class Database:
         except KeyError:
             return False, False
 
-    def __set(self, key, value, ttl=0):
+    def __set(self, key: str, value: Any, ttl: Optional[int] = 0) -> None:
         if self.plugins is not None:
             value = self.plugins.on_write(self, key, value)
-        data = {}
+        data: Dict[str, Any] = {}
         data["time"] = int(time.time())
-        data["ttl"] = int(ttl)
+        data["ttl"] = ttl
         data["content"] = value
-        self.databases["data"][key] = data
+        self._databases["data"][key] = data
         self.__updatefile()
 
-    def has(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    def has(self, key: str) -> bool:
+
         self.__loadfile()
         r, v = self.__exists(key)
         return r
 
-    def get(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    def get(self, key: str) -> Any:
+
         self.__loadfile()
         r, v = self.__exists(key)
         if r:
@@ -110,13 +105,12 @@ class Database:
         else:
             return None
 
-    def set(self, key, value, ttl=0):
-        if not isinstance(key, str):
-            raise TypeError
+    def set(self, key: str, value: Any, ttl: int = 0) -> bool:
+
         # to optimize, __loadfile() not called here because already called in size()
         size = self.size()
-        if self.databases["limit"] != 0:
-            if self.databases["limit"] == size:
+        if self._databases["limit"] != 0:
+            if self._databases["limit"] == size:
                 if self.plugins is not None:
                     self.plugins.on_limit(self, key, value, ttl)
                 return False
@@ -127,26 +121,25 @@ class Database:
             self.__set(key, value, ttl)
             return True
 
-    def delete(self, key):
-        if not isinstance(key, str):
-            raise TypeError
+    def delete(self, key: str) -> bool:
+
         # to optimize, __loadfile() not called here because already called in has()
         check = self.has(key)
         if check:
             if self.plugins is not None:
                 self.plugins.on_delete(self, key)
-            del self.databases["data"][key]
+            del self._databases["data"][key]
             self.__updatefile()
             return True
         else:
             return False
 
-    def size(self):
+    def size(self) -> int:
         self.__loadfile()
-        ret = len(self.databases["data"])
+        ret = len(self._databases["data"])
         return ret
 
-    def reset(self):
+    def reset(self) -> None:
         self.__loadfile()
-        self.databases["data"] = {}
+        self._databases["data"] = {}
         self.__updatefile()
