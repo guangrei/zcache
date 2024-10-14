@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from zcache.Class.AsyncDatabase import AsyncDatabase
+from zcache.Core.AsyncDatabase import AsyncDatabase
 from zcache.Plugins.AsyncBytesCachePlugins import AsyncBytesCachePlugins
 import aiohttp
 from typing import Any, Optional, Union, Dict
@@ -7,7 +7,7 @@ from typing import Any, Optional, Union, Dict
 
 class AsyncSmartRequest:
     """
-    A class for making Smart HTTP requests with caching capabilities using zcache.
+    A class for making Smart HTTP requests with caching capabilities using zcache
     """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:

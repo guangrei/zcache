@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from unittest import IsolatedAsyncioTestCase
-from zcache.Class.AsyncDatabase import AsyncDatabase
+from zcache.Core.AsyncDatabase import AsyncDatabase
 import asyncio
 
 

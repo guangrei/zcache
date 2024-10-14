@@ -22,7 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
-from zcache.Class.AsyncDatabase import AsyncDatabase
+from zcache.Core.AsyncDatabase import AsyncDatabase
 import uuid
 from zcache.Interface import AsyncStorageInterface
 from typing import Any, Optional, Union, List

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest
-from zcache.Class.Database import Database
+from zcache.Core.Database import Database
 import time
 
 
