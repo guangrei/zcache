@@ -8,11 +8,10 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "README.md")) as f:
     long_description = f.read()
 
-requirements = ["types-aiofiles", "aiohttp", "aiofiles"]
 
 setup(
     name="zcache",
-    version="v3.0.3",
+    version="v2.0.2",
     packages=find_packages(),
     license="MIT",
     author="guangrei",
@@ -22,5 +21,4 @@ setup(
     long_description_content_type="text/markdown",
     keywords="cache key value file json",
     url="https://github.com/guangrei/zcache",
-    install_requires=requirements,
 )

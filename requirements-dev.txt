@@ -1,4 +1,4 @@
-requests
 flake8
+requests
 mypy
 types-requests

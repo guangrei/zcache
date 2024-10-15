@@ -6,7 +6,7 @@
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/week)](https://pepy.tech/project/zcache)
 
-zcache is pure typed Python implementation of key value Cache/Database with abstract storage, plugins and asynchronous support.
+zcache is pure typed Python implementation of key value Cache/Database with abstract storage and plugins.
 
 ## Installation
 ```
@@ -47,60 +47,9 @@ d.delete("one")  # delete one item from stack
 print(d.set("three", 3))  # True
 ```
 
-# Asynchronous
+## Version Limited
 
-example asynchronous usage
-
-```python
-import asyncio
-from zcache import AsyncCache
-
-async def main():
-    c = AsyncCache()
-    await c.init()
-    await c.set("test", "OK")
-    print(await c.get("test"))
-
-if __name__ == '__main__':
-    asyncio.run(main())
-```
-
-# Storage and plugins
-
-you can change storage and use plugins, for example:
-
-```python
-from zcache import Cache
-from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
-from zcache.Storage.BaseFileStorage import BaseFileStorage
-
-
-storage = BaseFileStorage("/tmp/zcache.json")
-plugins = BytesCachePlugins()
-c = Cache(storage=storage, plugins=plugins)
-```
-see list current available [storage](https://github.com/guangrei/zcache/tree/main/zcache/Storage) and [plugins](https://github.com/guangrei/zcache/tree/main/zcache/Plugins), you can also create your own storage and plugins.
-
-# Extras
-
-[Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several module based on zcache.
-
-1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_smartrequest.py)
-
-`SmartRequest` is Simple HTTP Client with smart caching system based on `zcache`.
-
-2.[AsyncSmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_async_smartrequest.py)
-
-`AsyncSmartRequest` is asynchronous version of `SmartRequests`.
-
-3. [Queue](https://github.com/guangrei/zcache/blob/main/Tests/test_queue.py)
-
-`Queue` is Fifo Queue based on `zcache`.
-
-4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/Tests/test_async_queue.py)
-
-`AsyncQueue` is asynchronous version of`zcache`.
-
+version `2.0.2` is limited without Asynchronous and no need any dependency.
 
 ## License
 

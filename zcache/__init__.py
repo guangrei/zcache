@@ -1,10 +1,8 @@
 # -*-coding:utf8;-*-
 from .Core.Database import Database
-from .Core.AsyncDatabase import AsyncDatabase
 
 
 Cache = Database
-AsyncCache = AsyncDatabase
-__version__ = "3.0.3"
+__version__ = "2.0.2"
 __author__ = "Guangrei <myawn@pm.me>"
 __license__ = "MIT"
