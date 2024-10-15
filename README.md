@@ -1,4 +1,4 @@
-
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![status workflow test](https://github.com/guangrei/zcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/zcache/actions) 
 [![status workflow build](https://github.com/guangrei/zcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/zcache/actions)
 
@@ -99,7 +99,7 @@ see list current available [storage](https://github.com/guangrei/zcache/tree/mai
 
 4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/Tests/test_async_queue.py)
 
-`AsyncQueue` is asynchronous version of`zcache`.
+`AsyncQueue` is asynchronous version of `Queue`.
 
 
 ## License
