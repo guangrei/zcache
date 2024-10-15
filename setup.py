@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from setuptools import setup
+from setuptools import setup, find_packages
 from os import path
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -12,10 +12,8 @@ requirements = ["types-aiofiles", "aiohttp", "aiofiles"]
 
 setup(
     name="zcache",
-    version="v3.0.1",
-    packages=[
-        "zcache",
-    ],
+    version="v3.0.3",
+    packages=find_packages(),
     license="MIT",
     author="guangrei",
     author_email="myawn@pm.me",
