@@ -68,7 +68,7 @@ class DatabaseInterface(ABC):
         pass
 
     @abstractmethod
-    def get(self, key: str) -> Any:
+    def get(self, key: str, default: Any) -> Any:
         """
         get value from key.
         """
@@ -145,7 +145,7 @@ class AsyncDatabaseInterface(ABC):
         pass
 
     @abstractmethod
-    async def get(self, key: str) -> Any:
+    async def get(self, key: str, default: Any) -> Any:
         """
         get value from key.
         """

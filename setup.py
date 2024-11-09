@@ -12,7 +12,7 @@ requirements = ["types-aiofiles", "aiohttp", "aiofiles"]
 
 setup(
     name="zcache",
-    version="v3.0.3",
+    version="v3.0.4",
     packages=find_packages(),
     license="MIT",
     author="guangrei",

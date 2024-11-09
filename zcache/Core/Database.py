@@ -44,6 +44,7 @@ class Database(DatabaseInterface):
             path = "zcache.json"
         self._storage = storage or BaseFileStorage(path)
         self.__limit = limit
+        self.__loadfile()
 
     @property
     def databases(self) -> Dict[str, Any]:
@@ -94,7 +95,7 @@ class Database(DatabaseInterface):
         r, v = self.__exists(key)
         return r
 
-    def get(self, key: str) -> Any:
+    def get(self, key: str, default: Any = None) -> Any:
 
         self.__loadfile()
         r, v = self.__exists(key)
@@ -103,7 +104,7 @@ class Database(DatabaseInterface):
                 return self.plugins.on_read(self, key, v)
             return v
         else:
-            return None
+            return default
 
     def set(self, key: str, value: Any, ttl: int = 0) -> bool:
 

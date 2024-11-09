@@ -65,6 +65,7 @@ class AsyncDatabase(AsyncDatabaseInterface):
             s = AsyncFileStorage(path)
             await s.init()
             self._storage = s
+        await self.__loadfile()
 
     @property
     def databases(self) -> Dict[str, Any]:
@@ -114,7 +115,7 @@ class AsyncDatabase(AsyncDatabaseInterface):
         r, v = await self.__exists(key)
         return r
 
-    async def get(self, key: str) -> Any:
+    async def get(self, key: str, default: Any = None) -> Any:
         await self.__loadfile()
         r, v = await self.__exists(key)
         if r:
@@ -123,7 +124,7 @@ class AsyncDatabase(AsyncDatabaseInterface):
                 return ret
             return v
         else:
-            return False
+            return default
 
     async def set(self, key: str, value: Any, ttl: int = 0) -> bool:
         # to optimize, __loadfile() not called here because already called in size()
