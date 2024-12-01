@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 from zcache.Core.Database import Database
 from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
 from urllib import request
@@ -39,7 +40,7 @@ class SmartRequest:
         cache_path: Optional[str] = "smartrequest.json",
         cache_time: int = 120,
         offline_ttl: int = 604800,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         if not isinstance(url, str):
             cache_name = url.url

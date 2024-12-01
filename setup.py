@@ -12,8 +12,9 @@ requirements = ["types-aiofiles", "aiohttp", "aiofiles"]
 
 setup(
     name="zcache",
-    version="v3.0.4",
+    version="v3.0.5",
     packages=find_packages(),
+    package_data={"zcache": ["py.typed"]},
     license="MIT",
     author="guangrei",
     author_email="myawn@pm.me",

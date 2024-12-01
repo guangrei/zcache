@@ -1,4 +1,4 @@
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) 
 [![status workflow test](https://github.com/guangrei/zcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/zcache/actions) 
 [![status workflow build](https://github.com/guangrei/zcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/zcache/actions)
 
@@ -19,7 +19,7 @@ basic example:
 from zcache import Cache
 import time
 
-c = Cache(path="/tmp/tes1.cache")
+c = Cache(path="/tmp/tes1.json")
 print("set foo=bar: ", c.set("foo", "bar"))
 print("c size:", c.size())
 print("c has foo: ", c.has("foo"))
@@ -38,7 +38,7 @@ example with limited stack:
 ```python
 from zcache import Cache
 
-d = Cache(path="/tmp/test2.cache", limit=2)
+d = Cache(path="/tmp/test2.json", limit=2)
 d.reset()  # reset cache stack to 0
 print(d.set("one", 1))  # True
 print(d.set("two", 2))  # True

@@ -5,7 +5,6 @@ from zcache.Storage.DictStorage import DictStorage
 
 
 class DictStorageTest(unittest.TestCase):
-
     def test_database_or_cache(self) -> None:
         c = Database(storage=DictStorage())
         c.reset()

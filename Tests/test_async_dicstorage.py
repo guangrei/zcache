@@ -5,7 +5,6 @@ from zcache.Storage.AsyncDictStorage import AsyncDictStorage
 
 
 class DBTest(IsolatedAsyncioTestCase):
-
     async def test_database_or_cache(self) -> None:
         storage = AsyncDictStorage("test")
         await storage.init()

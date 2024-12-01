@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 import aiofiles
 from zcache.version import __version__
 from zcache.Interface import AsyncStorageInterface
@@ -32,7 +33,6 @@ from typing import Dict, Any
 
 
 class AsyncFileStorage(AsyncStorageInterface):
-
     def __init__(self, path: str) -> None:
         self._path = path
 

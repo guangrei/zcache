@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 from zcache.Interface import AsyncPluginsInterface, AsyncDatabaseInterface
 import pickle
 import os
@@ -37,9 +38,7 @@ class AsyncBytesCachePlugins(AsyncPluginsInterface):
     def __init__(self) -> None:
         self.useRandomName = True
 
-    async def on_write(
-        self, db: AsyncDatabaseInterface, key: str, value: Any
-    ) -> Any:  # noqa
+    async def on_write(self, db: AsyncDatabaseInterface, key: str, value: Any) -> Any:  # noqa
         if db.storage.filesystem:
             path = os.path.dirname(db.storage.path)
             darray = db.databases

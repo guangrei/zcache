@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 from zcache.Core.AsyncDatabase import AsyncDatabase
 import uuid
 from zcache.Interface import AsyncStorageInterface
@@ -52,7 +53,7 @@ class AsyncQueue:
         path: Optional[str] = "queue.json",
         storage: Optional[AsyncStorageInterface] = None,
         limit: int = 0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         self.limit = limit
         self.q = AsyncDatabase(path=path, storage=storage, **kwargs)

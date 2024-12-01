@@ -5,7 +5,6 @@ import asyncio
 
 
 class DBTest(IsolatedAsyncioTestCase):
-
     async def test_database_or_cache(self) -> None:
         c = AsyncDatabase("/tmp/async_cache_test.json")
         await c.init()

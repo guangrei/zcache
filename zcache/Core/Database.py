@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 from zcache.Storage.BaseFileStorage import BaseFileStorage
 from zcache.Interface import StorageInterface, PluginsInterface, DatabaseInterface
 import time
@@ -29,7 +30,6 @@ from typing import Any, Optional, Tuple, Dict
 
 
 class Database(DatabaseInterface):
-
     def __init__(
         self,
         path: Optional[str] = None,
@@ -90,13 +90,11 @@ class Database(DatabaseInterface):
         self.__updatefile()
 
     def has(self, key: str) -> bool:
-
         self.__loadfile()
         r, v = self.__exists(key)
         return r
 
     def get(self, key: str, default: Any = None) -> Any:
-
         self.__loadfile()
         r, v = self.__exists(key)
         if r:
@@ -107,7 +105,6 @@ class Database(DatabaseInterface):
             return default
 
     def set(self, key: str, value: Any, ttl: int = 0) -> bool:
-
         # to optimize, __loadfile() not called here because already called in size()
         size = self.size()
         if self._databases["limit"] != 0:
@@ -123,7 +120,6 @@ class Database(DatabaseInterface):
             return True
 
     def delete(self, key: str) -> bool:
-
         # to optimize, __loadfile() not called here because already called in has()
         check = self.has(key)
         if check:

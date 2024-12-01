@@ -5,7 +5,6 @@ import time
 
 
 class DBTest(unittest.TestCase):
-
     def test_database_or_cache(self) -> None:
         c = Database("/tmp/test.cache")
         c.reset()

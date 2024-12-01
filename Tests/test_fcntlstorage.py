@@ -5,7 +5,6 @@ from zcache.Storage.FcntlStorage import FcntlStorage
 
 
 class FcntlStorageTest(unittest.TestCase):
-
     def test_database_or_cache(self) -> None:
         c = Database(storage=FcntlStorage("/tmp/test_fcntl_storage.json"))
         c.reset()

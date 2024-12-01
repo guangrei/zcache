@@ -22,6 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 """
+
 from zcache.Core.Database import Database
 import uuid
 from zcache.Interface import StorageInterface
@@ -45,7 +46,7 @@ class Queue:
         path: Optional[str] = "queue.json",
         storage: Optional[StorageInterface] = None,
         limit: int = 0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         self.limit = limit
         self.q = Database(path=path, storage=storage, **kwargs)

@@ -23,7 +23,7 @@ class AsyncSmartRequest:
         cache_path: Optional[str] = "smartrequest.json",
         cache_time: int = 120,
         offline_ttl: int = 604800,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         if not isinstance(url, str):
             cache_name = url.url
