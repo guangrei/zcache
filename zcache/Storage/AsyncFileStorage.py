@@ -66,7 +66,8 @@ class AsyncFileStorage(AsyncStorageInterface):
     async def load(self) -> Dict[str, Any]:
         async with aiofiles.open(self._path, mode="r") as f:
             data = await f.read()
-        return json.loads(data)  # type: ignore[no-any-return]
+        ret = json.loads(data)
+        return dict(ret)
 
     async def save(self, data: Dict[str, Any]) -> None:
         json_encoded = json.dumps(data)

@@ -60,7 +60,8 @@ class BaseFileStorage(StorageInterface):
 
     def load(self) -> Dict[str, Any]:
         with open(self._path, "r") as f:
-            return json.loads(f.read())  # type: ignore[no-any-return]
+            ret = json.loads(f.read())
+        return dict(ret)
 
     def save(self, data: Dict[str, Any]) -> None:
         json_encoded = json.dumps(data)

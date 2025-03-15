@@ -82,7 +82,7 @@ class FcntlStorage(StorageInterface):
     def load(self) -> Dict[str, Any]:
         with FileLock(self._path, mode="r") as f:
             data = json.loads(f.read())
-        return data  # type: ignore[no-any-return]
+        return dict(data)
 
     def save(self, data: Dict[str, Any]) -> None:
         json_encoded = json.dumps(data)

@@ -30,7 +30,7 @@ import time
 
 
 class DictStorage(StorageInterface):
-    database: Dict[str, Any] = {}
+    database: Dict[str, Dict[str, Any]] = {}
 
     def __init__(self, path: str = "zcache.json") -> None:
         if path not in self.database:
@@ -55,7 +55,7 @@ class DictStorage(StorageInterface):
         self.database[path] = data
 
     def load(self) -> Dict[str, Any]:
-        return self.database[self._path]  # type: ignore[no-any-return]
+        return self.database[self._path]
 
     def save(self, data: Dict[str, Any]) -> None:
         self.database[self._path] = data

@@ -30,7 +30,7 @@ from typing import Dict, Any
 
 
 class AsyncDictStorage(AsyncStorageInterface):
-    database: Dict[str, Any] = {}
+    database: Dict[str, Dict[str, Any]] = {}
 
     def __init__(self, path: str = "zcache.json") -> None:
         self._path = path
@@ -61,7 +61,7 @@ class AsyncDictStorage(AsyncStorageInterface):
         self.database[path] = data
 
     async def load(self) -> Dict[str, Any]:
-        return self.database[self._path]  # type: ignore[no-any-return]
+        return self.database[self._path]
 
     async def save(self, data: Dict[str, Any]) -> None:
         self.database[self._path] = data

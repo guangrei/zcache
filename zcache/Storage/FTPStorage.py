@@ -48,11 +48,8 @@ class FTPStorage(StorageInterface):
         self.persistent = os.environ.get("FTPPERSISTENT", persistent)
         self._path = path
         if self.persistent == "True":
-            import atexit
-
             self.connection = FTP(self.host)
             self.connection.login(user=self.user, passwd=self.password)
-            atexit.register(self.exit)
         exists, _type = self.exists(path)
         if not exists:
             self.create(path)
@@ -77,7 +74,8 @@ class FTPStorage(StorageInterface):
 
     def load(self) -> Dict[str, Any]:
         data = self.read(self._path)
-        return json.loads(data.decode("utf-8"))  # type: ignore[no-any-return]
+        ret = json.loads(data.decode("utf-8"))
+        return dict(ret)
 
     def save(self, data: Dict[str, Any]) -> None:
         json_encoded = json.dumps(data)
@@ -133,14 +131,14 @@ class FTPStorage(StorageInterface):
                     # Coba untuk mengubah direktori ke path yang diberikan
                     ftp.cwd(remote_path)
                     return True, "directory"
-                except:  # noqa
+                except BaseException:
                     try:
                         # Jika gagal, coba cek apakah path tersebut adalah file
                         dir_name, file_name = os.path.split(remote_path)
                         ftp.cwd(dir_name)
                         files = ftp.nlst()
                         return file_name in files, "file"
-                    except:  # noqa
+                    except BaseException:
                         # Jika keduanya gagal, berarti path tidak ada
                         return False, False
         else:
@@ -148,14 +146,14 @@ class FTPStorage(StorageInterface):
                 # Coba untuk mengubah direktori ke path yang diberikan
                 self.connection.cwd(remote_path)
                 return True, "directory"
-            except:  # noqa
+            except BaseException:
                 try:
                     # Jika gagal, coba cek apakah path tersebut adalah file
                     dir_name, file_name = os.path.split(remote_path)
                     self.connection.cwd(dir_name)
                     files = self.connection.nlst()
                     return file_name in files, "file"
-                except:  # noqa
+                except BaseException:
                     # Jika keduanya gagal, berarti path tidak ada
                     return False, "file"
 
@@ -169,7 +167,7 @@ class FTPStorage(StorageInterface):
                     # Membuat direktori baru
                     ftp.mkd(remote_dir_path)
                     return True
-                except:  # noqa
+                except BaseException:
                     # Jika terjadi kesalahan, return False
                     return False
         else:
@@ -177,7 +175,7 @@ class FTPStorage(StorageInterface):
                 # Membuat direktori baru
                 self.connection.mkd(remote_dir_path)
                 return True
-            except:  # noqa
+            except BaseException:
                 # Jika terjadi kesalahan, return False
                 return False
 
@@ -191,7 +189,7 @@ class FTPStorage(StorageInterface):
                     # Hapus file dari FTP server
                     ftp.delete(remote_file_path)
                     return True
-                except:  # noqa
+                except BaseException:
                     # Jika terjadi kesalahan, return False
                     return False
         else:
@@ -199,9 +197,10 @@ class FTPStorage(StorageInterface):
                 # Hapus file dari FTP server
                 self.connection.delete(remote_file_path)
                 return True
-            except:  # noqa
+            except BaseException:
                 # Jika terjadi kesalahan, return False
                 return False
 
-    def exit(self) -> None:
-        self.connection.quit()
+    def __del__(self) -> None:
+        if getattr(self, "connection"):
+            self.connection.quit()
