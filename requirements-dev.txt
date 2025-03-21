@@ -1,9 +1,0 @@
-requests
-types-requests
-aiofiles
-aiohttp
-types-aiofiles
-setuptools
-types-setuptools
-ruff
-mypy

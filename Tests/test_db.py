@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import unittest
-from zcache.Core.Database import Database
+from zcache.Sync import Cache
 import time
 
 
 class DBTest(unittest.TestCase):
     def test_database_or_cache(self) -> None:
-        c = Database("/tmp/test.cache")
+        c = Cache("/tmp/db_1.json")
         c.reset()
         self.assertEqual(c.set("foo", "bar"), True)
         self.assertEqual(c.size(), 1)
@@ -21,7 +21,7 @@ class DBTest(unittest.TestCase):
         self.assertEqual(c.size(), 0)
 
     def test_limit(self) -> None:
-        d = Database("/tmp/test2.cache", limit=2)
+        d = Cache("/tmp/db_2.json", limit=2)
         d.reset()
         self.assertEqual(d.set("one", 1), True)
         self.assertEqual(d.set("two", 2), True)

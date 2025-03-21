@@ -1,0 +1,38 @@
+[project]
+name = "zcache"
+version = "4.0.0"
+description = "Key Value Cache with abstract storage, plugins and asynchronous support"
+readme = "README.md"
+authors = [
+    { name = "guangrei", email = "myawn@pm.me" }
+]
+license = { text = "MIT" }
+keywords = ["cache", "key", "value", "file", "json"]
+requires-python = ">=3.0.0"
+dependencies = [
+    "types-aiofiles",
+    "aiofiles"
+]
+
+[project.urls]
+Homepage = "https://github.com/guangrei/zcache"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = { find = { where = ["."] } }
+
+[tool.setuptools.package-data]
+zcache = ["py.typed"]
+
+[dependency-groups]
+dev = [
+    "build",
+    "mypy",
+    "ruff",
+    "setuptools",
+    "twine",
+    "types-setuptools",
+]
