@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from unittest import IsolatedAsyncioTestCase
-from zcache.Core.AsyncDatabase import AsyncDatabase
+from zcache.Async import Cache
 import asyncio
 
 
 class DBTest(IsolatedAsyncioTestCase):
     async def test_database_or_cache(self) -> None:
-        c = AsyncDatabase("/tmp/async_cache_test.json")
-        await c.init()
+        c = await Cache("/tmp/async_cache_test.json")
         await c.reset()
 
         expected = await c.set("foo", "bar")
@@ -43,8 +42,7 @@ class DBTest(IsolatedAsyncioTestCase):
         self.assertEqual(expected_int, 0)
 
     async def test_limit(self) -> None:
-        d = AsyncDatabase("/tmp/async_cache_test.json", limit=2)
-        await d.init()
+        d = await Cache("/tmp/async_cache_test.json", limit=2)
         await d.reset()
 
         expected = await d.set("one", 1)
