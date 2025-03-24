@@ -1,6 +1,5 @@
 [![ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff) 
 [![status workflow test](https://github.com/guangrei/zcache/actions/workflows/python-app.yml/badge.svg)](https://github.com/guangrei/zcache/actions) 
-[![status workflow build](https://github.com/guangrei/zcache/actions/workflows/release_to_pypi.yml/badge.svg)](https://github.com/guangrei/zcache/actions)
 
 [![Downloads](https://static.pepy.tech/badge/zcache)](https://pepy.tech/project/zcache)
 [![Downloads](https://static.pepy.tech/badge/zcache/month)](https://pepy.tech/project/zcache)
@@ -16,7 +15,7 @@ pip install zcache
 
 basic example:
 ```python
-from zcache import Cache
+from zcache.Sync import Cache
 import time
 
 c = Cache(path="/tmp/tes1.json")
@@ -36,7 +35,7 @@ print("c size:", c.size())
 ```
 example with limited stack:
 ```python
-from zcache import Cache
+from zcache.Sync import Cache
 
 d = Cache(path="/tmp/test2.json", limit=2)
 d.reset()  # reset cache stack to 0
@@ -53,11 +52,10 @@ example asynchronous usage
 
 ```python
 import asyncio
-from zcache import AsyncCache
+from zcache.Async import Cache
 
 async def main():
-    c = AsyncCache()
-    await c.init()
+    c = await Cache()
     await c.set("test", "OK")
     print(await c.get("test"))
 
@@ -70,7 +68,7 @@ if __name__ == '__main__':
 you can change storage and use plugins, for example:
 
 ```python
-from zcache import Cache
+from zcache.Sync import Cache
 from zcache.Plugins.BytesCachePlugins import BytesCachePlugins
 from zcache.Storage.BaseFileStorage import BaseFileStorage
 
@@ -80,27 +78,6 @@ plugins = BytesCachePlugins()
 c = Cache(storage=storage, plugins=plugins)
 ```
 see list current available [storage](https://github.com/guangrei/zcache/tree/main/zcache/Storage) and [plugins](https://github.com/guangrei/zcache/tree/main/zcache/Plugins), you can also create your own storage and plugins.
-
-# Extras
-
-[Extras](https://github.com/guangrei/zcache/tree/main/zcache/Extras) is several module based on zcache.
-
-1. [SmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_smartrequest.py)
-
-`SmartRequest` is Simple HTTP Client with smart caching system based on `zcache`.
-
-2.[AsyncSmartRequest](https://github.com/guangrei/zcache/blob/main/Tests/test_async_smartrequest.py)
-
-`AsyncSmartRequest` is asynchronous version of `SmartRequests`.
-
-3. [Queue](https://github.com/guangrei/zcache/blob/main/Tests/test_queue.py)
-
-`Queue` is Fifo Queue based on `zcache`.
-
-4. [AsyncQueue](https://github.com/guangrei/zcache/blob/main/Tests/test_async_queue.py)
-
-`AsyncQueue` is asynchronous version of `Queue`.
-
 
 ## License
 
