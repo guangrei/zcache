@@ -1,22 +1,22 @@
 # -*-coding:utf8;-*-
 from zcache.Sync import Cache as SyncCache
 from zcache.Async import Cache as AsyncCache
-from typing import Union, Generator, Any, Type, Awaitable
+from typing import Union, Generator, Any, Type, Awaitable, cast
 
 
 class Cache:
     _init_future: Awaitable[AsyncCache]
 
-    def __new__(  # type: ignore[misc]
+    def __new__(
         cls: Type["Cache"], *args: Any, Async: bool = False, **kwargs: Any
-    ) -> Union[SyncCache, "Cache"]:
+    ) -> "Cache":
         if Async:
             instance = super().__new__(cls)
             instance._init_future = AsyncCache(*args, **kwargs)
-            return instance
+            return cast("Cache", instance)
         else:
             ret: SyncCache = SyncCache(*args, **kwargs)
-            return ret
+            return cast("Cache", ret)
 
     async def _init(self) -> AsyncCache:
         ret = await self._init_future
