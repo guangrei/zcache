@@ -1,7 +1,7 @@
 # -*-coding:utf8;-*-
 from zcache.Sync import Cache as SyncCache
 from zcache.Async import Cache as AsyncCache
-from typing import Union, Generator, Any, Type, Awaitable, cast
+from typing import Generator, Any, Type, Awaitable, cast
 
 
 class Cache:
